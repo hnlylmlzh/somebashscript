@@ -147,7 +147,7 @@ GetPackManager
 
 if [ -d "/www/server/phpmyadmin/pma" ];then
 	rm -rf /www/server/phpmyadmin/pma
-	EN_CHECK=$(cat ./config.json |grep English)
+	EN_CHECK=$(cat /www/server/panel/config/config.json |grep English)
 	if [ "${EN_CHECK}" ];then
 		curl http://download.bt.cn/install/update6_en.sh|bash
 	else
@@ -157,7 +157,7 @@ if [ -d "/www/server/phpmyadmin/pma" ];then
 fi
 
 if [ ! $NODE_URL ];then
-	EN_CHECK=$(cat ./config.json |grep English)
+	EN_CHECK=$(cat /www/server/panel/config/config.json |grep English)
 	if [ -z "${EN_CHECK}" ];then
 		echo '正在选择下载节点...';
 	else
