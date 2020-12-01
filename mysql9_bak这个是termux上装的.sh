@@ -2,27 +2,25 @@
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
 
-public_file=./public.sh
+public_file=/www/server/panel/install/public.sh
 publicFileMd5=$(md5sum ${public_file} 2>/dev/null|awk '{print $1}')
 md5check="1e23b786caaf2d0737a2dc13a1e3f29f"
-#if [ "${publicFileMd5}" != "${md5check}"  ]; then
-#	wget -O Tpublic.sh http://download.bt.cn/install/public.sh -T 20;
-#	publicFileMd5=$(md5sum Tpublic.sh 2>/dev/null|awk '{print $1}')
-#	if [ "${publicFileMd5}" == "${md5check}"  ]; then
-#		\cp -rpa Tpublic.sh $public_file
-#	fi
-#	rm -f Tpublic.sh
-#fi
-
+if [ "${publicFileMd5}" != "${md5check}"  ]; then
+	wget -O Tpublic.sh http://download.bt.cn/install/public.sh -T 20;
+	publicFileMd5=$(md5sum Tpublic.sh 2>/dev/null|awk '{print $1}')
+	if [ "${publicFileMd5}" == "${md5check}"  ]; then
+		\cp -rpa Tpublic.sh $public_file
+	fi
+	rm -f Tpublic.sh
+fi
 . $public_file
 download_Url=$NODE_URL
 
 Root_Path=`cat /var/bt_setupPath.conf`
-Root_Path="./www" #设到这里
 Setup_Path=$Root_Path/server/mysql
 Data_Path=$Root_Path/server/data
 Is_64bit=`getconf LONG_BIT`
-run_path='./root'
+run_path='/root'
 mysql_51='5.1.73'
 mysql_55='5.5.62'
 mysql_56='5.6.49'
@@ -80,7 +78,7 @@ Service_Add(){
 		chkconfig --level 2345 mysqld on
 	elif [ "${PM}" == "apt-get" ]; then
 		update-rc.d mysqld defaults
-	fi
+	fi 
 }
 Service_Del(){
  	if [ "${PM}" == "yum" ] || [ "${PM}" == "dnf" ]; then
@@ -102,7 +100,7 @@ printVersion(){
 }
 Install_Rpcgen(){
 	if [ ! -f "/usr/bin/rpcgen" ];then
-		wget ${download_Url}/src/rpcsvc-proto-1.4.tar.gz
+		wget ${download_Url}/src/rpcsvc-proto-1.4.tar.gz 
 		tar -xvf rpcsvc-proto-1.4.tar.gz
 		cd rpcsvc-proto-1.4
 		./configure --prefix=/usr/local/rpcgen
@@ -124,7 +122,7 @@ Setup_Mysql_PyDb(){
 	python setup.py install
 	cd ..
 	rm -f src.zip
-	rm -rf src
+	rm -rf src 
 	/etc/init.d/bt reload
 
 }
@@ -140,14 +138,14 @@ Install_Mysql_PyDb(){
 		else
 			local pyMysql="MySQL-python"
 			local pyMysqlVer="1.2.5"
-		fi
+		fi 
 		if [ "${checkPip}" = "200" ];then
 			pip install ${pyMysql}
 		else
 			Setup_Mysql_PyDb ${pyMysql} ${pyMysqlVer}
 		fi
-	fi
-
+	fi	
+	
 	if [ "${checkPip}" = "200" ];then
 		pip install PyMySQL
 	else
@@ -177,7 +175,7 @@ SetLink()
 	ln -sf ${Setup_Path}/bin/mysqld_safe /usr/bin/mysqld_safe
 	ln -sf ${Setup_Path}/bin/mysqlcheck /usr/bin/mysqlcheck
 	ln -sf ${Setup_Path}/bin/mysql_config /usr/bin/mysql_config
-
+	
 	rm -f /usr/lib/libmysqlclient.so.16
 	rm -f /usr/lib64/libmysqlclient.so.16
 	rm -f /usr/lib/libmysqlclient.so.18
@@ -186,7 +184,7 @@ SetLink()
 	rm -f /usr/lib64/libmysqlclient.so.20
 	rm -f /usr/lib/libmysqlclient.so.21
 	rm -f /usr/lib64/libmysqlclient.so.21
-
+	
 	if [ -f "${Setup_Path}/lib/libmysqlclient.so.18" ];then
 		ln -sf ${Setup_Path}/lib/libmysqlclient.so.18 /usr/lib/libmysqlclient.so.16
 		ln -sf ${Setup_Path}/lib/libmysqlclient.so.18 /usr/lib64/libmysqlclient.so.16
@@ -442,7 +440,7 @@ MySQL_Opt()
 	chmod 644 /etc/my.cnf
 }
 Install_Ready(){
-	Close_MySQL
+	Close_MySQL 
 	cd ${run_path}
 	mkdir -p ${Setup_Path}
 	rm -rf ${Setup_Path}/*
@@ -455,23 +453,16 @@ Download_Src(){
 	mariadbCheck=$(echo ${version}|grep mariadb)
 	if [ -z "${mariadbCheck}" ]; then
 		sqlName="mysql"
-	else
+	else 
 		sqlName="mariadb"
 	fi
-    echo "下载的是${sqlName}"
-    echo "Setup_Path是${Setup_Path}"
-    echo "${download_Url}/src/mysql-boost-${sqlVersion}.tar.gz"
-    echo "wget ${Setup_Path}/src.tar.gz"
+
 	if [ "${version}" == "5.7" ] || [ "${version}" == "8.0" ]; then
-
-#		wget -O ${Setup_Path}/src.tar.gz ${download_Url}/src/mysql-boost-${sqlVersion}.tar.gz -T20
-		wget -O src.tar.gz ${download_Url}/src/mysql-boost-${sqlVersion}.tar.gz -T20
-
+		wget -O ${Setup_Path}/src.tar.gz ${download_Url}/src/mysql-boost-${sqlVersion}.tar.gz -T20
 	else
 		wget -O ${Setup_Path}/src.tar.gz ${download_Url}/src/${sqlName}-${sqlVersion}.tar.gz -T20
 	fi
 
-    #wget  -O  ./www/server/mysql/src.tar.gz  http://dg2.bt.cn/src/mysql-boost-5.7.31.tar.gz  -T20
 	rm -rf ${sqlName}-${sqlVersion}
 	rm -rf src
 	tar -zxvf src.tar.gz
@@ -482,7 +473,7 @@ Download_Src(){
 		patch -p0 < mysql-5.5-fix-arm-client_plugin.patch
 		rm -f mysql-5.5-fix-arm-client_plugin.patch
 	fi
-
+	
 	mv ${sqlName}-${sqlVersion} src
 	cd src
 }
@@ -505,10 +496,8 @@ Install_Configure(){
 			i_make_args="$i_make_args $args_string"
 		fi
 	done
-#    echo ${i_make_args}
-#    exit;
+
 	cd src ${Setup_Path}/src
-	echo ${pwd}
 	if [ "${version}" == "5.1" ];then
 		gccVersionCheck
 		./configure --prefix=${Setup_Path} --sysconfdir=/etc --with-plugins=csv,myisam,myisammrg,heap,innobase --with-extra-charsets=all --with-charset=utf8 --with-collation=utf8_general_ci --with-embedded-server --enable-local-infile --enable-assembler --with-mysqld-ldflags=-all-static --enable-thread-safe-client --with-big-tables --with-readline --with-ssl ${i_make_args}
@@ -543,9 +532,8 @@ Install_Configure(){
 	else
 		cmake -DCMAKE_INSTALL_PREFIX=${Setup_Path} -DWITH_ARIA_STORAGE_ENGINE=1 -DWITH_XTRADB_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITHOUT_TOKUDB=1 ${i_make_args}
 	fi
-	exit;
 	make -j${cpuCore}
-
+	
 	if [ $? -ne 0 ];then
 		echo '========================================================'
 		GetSysInfo
@@ -599,7 +587,7 @@ Mysql_Initialize(){
 	chmod 755 /etc/init.d/mysqld
 
 	if [ "${version}" != "5.7" ];then
-		if [ "${version}" != "8.0" ]; then
+		if [ "${version}" != "8.0" ]; then	
 			sed -i "s#\"\$\*\"#--sql-mode=\"NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION\"#" /etc/init.d/mysqld
 		fi
 	fi
@@ -626,12 +614,12 @@ EOF
 
 Bt_Check(){
 	checkFile="/www/server/panel/install/check.sh"
-	wget -O ${checkFile} ${download_Url}/tools/check.sh
-	. ${checkFile}
+	wget -O ${checkFile} ${download_Url}/tools/check.sh			
+	. ${checkFile} 
 }
 
 Close_MySQL()
-{
+{	
 	[ -f "/etc/init.d/mysqld" ] && /etc/init.d/mysqld stop
 
 	if [ "${PM}" = "yum" ];then
@@ -658,8 +646,8 @@ Close_MySQL()
 	fi
 }
 
-actionType='install'
-version="5.7"
+actionType=$1
+version=$2
 
 if [ "${actionType}" == 'install' ] || [ "${actionType}" == "update" ];then
 	if [ -z "${version}" ]; then
@@ -687,7 +675,7 @@ if [ "${actionType}" == 'install' ] || [ "${actionType}" == "update" ];then
 			;;
 		'mariadb_10.0')
 			sqlVersion=${mysql_mariadb_100}
-			;;
+			;;		
 		'mariadb_10.1')
 			sqlVersion=${mysql_mariadb_101}
 			;;
@@ -704,22 +692,18 @@ if [ "${actionType}" == 'install' ] || [ "${actionType}" == "update" ];then
 			sqlVersion=${mysql_mariadb_105}
 			;;
 	esac
-#	System_Lib
-#	if [ "${actionType}" == "install" ]; then
-#		Install_Ready
-#	fi
-#
-#	if [ "${Centos8Check}" ];then
-#		yum install libtirpc libtirpc-devel -y
-#		Install_Rpcgen
-#	fi
-
-#    echo install ready
-#    exit;
-	#Download_Src
-	cd ${Setup_Path}/src
+	System_Lib
+	if [ "${actionType}" == "install" ]; then
+		Install_Ready
+	fi
+	
+	if [ "${Centos8Check}" ];then
+		yum install libtirpc libtirpc-devel -y
+		Install_Rpcgen
+	fi
+	
+	Download_Src
 	Install_Configure
-	exit;
 	Install_Mysql
 	My_Cnf
 	MySQL_Opt
@@ -738,4 +722,5 @@ if [ "${actionType}" == 'install' ] || [ "${actionType}" == "update" ];then
 elif [ "$actionType" == 'uninstall' ];then
 	Close_MySQL del
 fi
+
 
