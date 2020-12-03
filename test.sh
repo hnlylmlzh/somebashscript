@@ -14,11 +14,12 @@ md5check="1e23b786caaf2d0737a2dc13a1e3f29f"
 #	rm -f Tpublic.sh
 #fi
 
+#ln -sf /mnt/e/bash/www/server/mysql/src/install/www/server/mysql /www/server/mysql
 . $public_file
 download_Url=$NODE_URL
 
 Root_Path=`cat /var/bt_setupPath.conf`
-Root_Path="./www" #设到这里
+Root_Path="/www" #设到这里
 Setup_Path=$Root_Path/server/mysql
 Data_Path=$Root_Path/server/data
 Is_64bit=`getconf LONG_BIT`
@@ -509,41 +510,42 @@ Install_Configure(){
 #    exit;
 	cd src ${Setup_Path}/src
 	echo ${pwd}
-	if [ "${version}" == "5.1" ];then
-		gccVersionCheck
-		./configure --prefix=${Setup_Path} --sysconfdir=/etc --with-plugins=csv,myisam,myisammrg,heap,innobase --with-extra-charsets=all --with-charset=utf8 --with-collation=utf8_general_ci --with-embedded-server --enable-local-infile --enable-assembler --with-mysqld-ldflags=-all-static --enable-thread-safe-client --with-big-tables --with-readline --with-ssl ${i_make_args}
-	elif [ "${version}" == "5.5" ]; then
-		gccVersionCheck
-		cmake -DCMAKE_INSTALL_PREFIX=${Setup_Path} -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${i_make_args}
-	elif [  "${version}" == "5.6" ]; then
-		cmake -DCMAKE_INSTALL_PREFIX=${Setup_Path} -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${i_make_args}
-	elif [ "${version}" == "5.7" ]; then
-		mkdir install
-		cd install
-		cmake .. -DCMAKE_INSTALL_PREFIX=${Setup_Path} -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITH_BOOST=../boost ${i_make_args}
-	elif [ "${version}" == "8.0" ]; then
-		mkdir install
-		cd install
-		cmakeV="cmake"
-		if [ "${PM}" = "yum" ]; then
-			if [ -z "${Centos8Check}" ];then
-				yum install centos-release-scl-rh -y
-				yum install devtoolset-7-gcc devtoolset-7-gcc-c++ -y
-				yum install cmake3 -y
-				cmakeV="cmake3"
-				export CC=/opt/rh/devtoolset-7/root/usr/bin/gcc
-				export CXX=/opt/rh/devtoolset-7/root/usr/bin/g++
-			fi
-		fi
-		${cmakeV} .. -DCMAKE_INSTALL_PREFIX=${Setup_Path} -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DENABLED_LOCAL_INFILE=1 -DWITH_BOOST=../boost ${i_make_args}
-	elif [ "${version}" == "alisql" ]; then
-		 cmake -DCMAKE_INSTALL_PREFIX=${Setup_Path} -DMYSQL_UNIX_ADDR=/tmp/mysql.sock -DDEFAULT_CHARSET=utf8   -DDEFAULT_COLLATION=utf8_general_ci -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_ARCHIVE_STORAGE_ENGINE=1 -DWITH_BLACKHOLE_STORAGE_ENGINE=1 -DMYSQL_DATADIR=${Data_Path} -DMYSQL_TCP_PORT=3306 -DENABLE_DOWNLOADS=1 ${i_make_args}
-	elif [ "${version}" == "mariadb_10.0" ]; then
-		cmake -DCMAKE_INSTALL_PREFIX=${Setup_Path} -DWITH_ARIA_STORAGE_ENGINE=1 -DWITH_XTRADB_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${i_make_args}
-	else
-		cmake -DCMAKE_INSTALL_PREFIX=${Setup_Path} -DWITH_ARIA_STORAGE_ENGINE=1 -DWITH_XTRADB_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITHOUT_TOKUDB=1 ${i_make_args}
-	fi
-	exit;
+#	if [ "${version}" == "5.1" ];then
+#		gccVersionCheck
+#		./configure --prefix=${Setup_Path} --sysconfdir=/etc --with-plugins=csv,myisam,myisammrg,heap,innobase --with-extra-charsets=all --with-charset=utf8 --with-collation=utf8_general_ci --with-embedded-server --enable-local-infile --enable-assembler --with-mysqld-ldflags=-all-static --enable-thread-safe-client --with-big-tables --with-readline --with-ssl ${i_make_args}
+#	elif [ "${version}" == "5.5" ]; then
+#		gccVersionCheck
+#		cmake -DCMAKE_INSTALL_PREFIX=${Setup_Path} -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${i_make_args}
+#	elif [  "${version}" == "5.6" ]; then
+#		cmake -DCMAKE_INSTALL_PREFIX=${Setup_Path} -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${i_make_args}
+#	elif [ "${version}" == "5.7" ]; then
+#		mkdir install
+#		cd install
+#		cmake .. -DCMAKE_INSTALL_PREFIX=${Setup_Path} -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITH_BOOST=../boost ${i_make_args}
+#	elif [ "${version}" == "8.0" ]; then
+#		mkdir install
+#		cd install
+#		cmakeV="cmake"
+#		if [ "${PM}" = "yum" ]; then
+#			if [ -z "${Centos8Check}" ];then
+#				yum install centos-release-scl-rh -y
+#				yum install devtoolset-7-gcc devtoolset-7-gcc-c++ -y
+#				yum install cmake3 -y
+#				cmakeV="cmake3"
+#				export CC=/opt/rh/devtoolset-7/root/usr/bin/gcc
+#				export CXX=/opt/rh/devtoolset-7/root/usr/bin/g++
+#			fi
+#		fi
+#		${cmakeV} .. -DCMAKE_INSTALL_PREFIX=${Setup_Path} -DSYSCONFDIR=/etc -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DENABLED_LOCAL_INFILE=1 -DWITH_BOOST=../boost ${i_make_args}
+#	elif [ "${version}" == "alisql" ]; then
+#		 cmake -DCMAKE_INSTALL_PREFIX=${Setup_Path} -DMYSQL_UNIX_ADDR=/tmp/mysql.sock -DDEFAULT_CHARSET=utf8   -DDEFAULT_COLLATION=utf8_general_ci -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_ARCHIVE_STORAGE_ENGINE=1 -DWITH_BLACKHOLE_STORAGE_ENGINE=1 -DMYSQL_DATADIR=${Data_Path} -DMYSQL_TCP_PORT=3306 -DENABLE_DOWNLOADS=1 ${i_make_args}
+#	elif [ "${version}" == "mariadb_10.0" ]; then
+#		cmake -DCMAKE_INSTALL_PREFIX=${Setup_Path} -DWITH_ARIA_STORAGE_ENGINE=1 -DWITH_XTRADB_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 ${i_make_args}
+#	else
+#		cmake -DCMAKE_INSTALL_PREFIX=${Setup_Path} -DWITH_ARIA_STORAGE_ENGINE=1 -DWITH_XTRADB_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8mb4 -DDEFAULT_COLLATION=utf8mb4_general_ci -DWITH_READLINE=1 -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DWITHOUT_TOKUDB=1 ${i_make_args}
+#	fi
+#	exit;
+    cd install
 	make -j${cpuCore}
 
 	if [ $? -ne 0 ];then
@@ -590,11 +592,15 @@ Mysql_Initialize(){
 	if [ "${version}" == "5.1" ]; then
 		${Setup_Path}/bin/mysql_install_db --defaults-file=/etc/my.cnf --basedir=${Setup_Path} --datadir=${Data_Path} --user=mysql
 	elif [ "${version}" == "5.7" ] || [ "${version}" == "8.0" ];then
+	set -x
 		${Setup_Path}/bin/mysqld --initialize-insecure --basedir=${Setup_Path} --datadir=${Data_Path} --user=mysql
+	set +x
+		exit;
 	else
 		${Setup_Path}/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=${Setup_Path} --datadir=${Data_Path} --user=mysql ${Authentication_Method}
 	fi
 
+    exit;
 	\cp support-files/mysql.server /etc/init.d/mysqld
 	chmod 755 /etc/init.d/mysqld
 
@@ -618,8 +624,8 @@ EOF
 	${Setup_Path}/bin/mysqladmin -u root password "${mysqlpwd}"
 
 	cd ${Setup_Path}
-	rm -f src.tar.gz
-	rm -rf src
+#	rm -f src.tar.gz
+#	rm -rf src
 	/etc/init.d/mysqld start
 
 }
@@ -719,11 +725,15 @@ if [ "${actionType}" == 'install' ] || [ "${actionType}" == "update" ];then
 	#Download_Src
 	cd ${Setup_Path}/src
 	Install_Configure
-	exit;
+
 	Install_Mysql
+	exit;
 	My_Cnf
 	MySQL_Opt
+	echo cnf
+
 	Mysql_Initialize
+	exit;
 	SetLink
 	Service_Add
 	printVersion

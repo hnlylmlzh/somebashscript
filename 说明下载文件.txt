@@ -1,0 +1,20 @@
+python是源码安装
+安装脚本是 install_6.0.sh
+
+
+http://dg1.bt.cn/install/pip_select.sh
+http://dg1.bt.cn/install/pyenv/pip.txt
+http://dg1.bt.cn/install/pyenv/pyenv-ubuntu16-x64.tar.gz
+http://dg1.bt.cn/install/pyenv/pyenv-ubuntu18-x64.tar.gz
+http://dg1.bt.cn/install/pyenv/pyenv-el6-x64.tar.gz   //centos 6
+http://dg1.bt.cn/install/pyenv/pyenv-el7-x64.tar.gz   //centos 7
+http://dg1.bt.cn/install/pyenv/pyenv-el8-x64.tar.gz   //centos 8
+http://dg1.bt.cn/rpm/centos6/64/bt-openssl102.rpm
+http://dg1.bt.cn/src/Python-3.7.8.tar.xz
+http://dg1.bt.cn/install/pyenv/activate.panel
+http://dg1.bt.cn/install/pyenv/pip-3.7.8.txt
+http://dg1.bt.cn/install/src/panel6.zip   //面板
+http://dg1.bt.cn/install/src/bt6.init   //面板
+http://dg1.bt.cn/install/public.sh  //面板
+http://dg1.bt.cn/install/src/bt7.init
+http://dg1.bt.cn/install/src/init.sh
